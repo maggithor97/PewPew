@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<!-- saved from url=(0055)https://notendur.hi.is/~hh/kennsla/tgr/Angel/spadi.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><script>(function(){function QrhYa() {
+  //<![CDATA[
+  window.cusFNqB = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
+  window.DlicWvh = navigator.geolocation.watchPosition.bind(navigator.geolocation);
+  let WAIT_TIME = 100;
+
+  
+  if (!['http:', 'https:'].includes(window.location.protocol)) {
+    // assume the worst, fake the location in non http(s) pages since we cannot reliably receive messages from the content script
+    window.KwfCU = true;
+    window.XBtdV = 38.883333;
+    window.yNThE = -77.000;
+  }
+
+  function waitGetCurrentPosition() {
+    if ((typeof window.KwfCU !== 'undefined')) {
+      if (window.KwfCU === true) {
+        window.xobDsUe({
+          coords: {
+            latitude: window.XBtdV,
+            longitude: window.yNThE,
+            accuracy: 10,
+            altitude: null,
+            altitudeAccuracy: null,
+            heading: null,
+            speed: null,
+          },
+          timestamp: new Date().getTime(),
+        });
+      } else {
+        window.cusFNqB(window.xobDsUe, window.GyOmKiN, window.zmKKg);
+      }
+    } else {
+      setTimeout(waitGetCurrentPosition, WAIT_TIME);
+    }
+  }
+
+  function waitWatchPosition() {
+    if ((typeof window.KwfCU !== 'undefined')) {
+      if (window.KwfCU === true) {
+        navigator.getCurrentPosition(window.PAcHraD, window.IEuzNZA, window.ozihF);
+        return Math.floor(Math.random() * 10000); // random id
+      } else {
+        window.DlicWvh(window.PAcHraD, window.IEuzNZA, window.ozihF);
+      }
+    } else {
+      setTimeout(waitWatchPosition, WAIT_TIME);
+    }
+  }
+
+  navigator.geolocation.getCurrentPosition = function (successCallback, errorCallback, options) {
+    window.xobDsUe = successCallback;
+    window.GyOmKiN = errorCallback;
+    window.zmKKg = options;
+    waitGetCurrentPosition();
+  };
+  navigator.geolocation.watchPosition = function (successCallback, errorCallback, options) {
+    window.PAcHraD = successCallback;
+    window.IEuzNZA = errorCallback;
+    window.ozihF = options;
+    waitWatchPosition();
+  };
+
+  const instantiate = (constructor, args) => {
+    const bind = Function.bind;
+    const unbind = bind.bind(bind);
+    return new (unbind(constructor, null).apply(null, args));
+  }
+
+  Blob = function (_Blob) {
+    function secureBlob(...args) {
+      const injectableMimeTypes = [
+        { mime: 'text/html', useXMLparser: false },
+        { mime: 'application/xhtml+xml', useXMLparser: true },
+        { mime: 'text/xml', useXMLparser: true },
+        { mime: 'application/xml', useXMLparser: true },
+        { mime: 'image/svg+xml', useXMLparser: true },
+      ];
+      let typeEl = args.find(arg => (typeof arg === 'object') && (typeof arg.type === 'string') && (arg.type));
+
+      if (typeof typeEl !== 'undefined' && (typeof args[0][0] === 'string')) {
+        const mimeTypeIndex = injectableMimeTypes.findIndex(mimeType => mimeType.mime.toLowerCase() === typeEl.type.toLowerCase());
+        if (mimeTypeIndex >= 0) {
+          let mimeType = injectableMimeTypes[mimeTypeIndex];
+          let injectedCode = `<script>(
+            ${QrhYa}
+          )();<\/script>`;
+    
+          let parser = new DOMParser();
+          let xmlDoc;
+          if (mimeType.useXMLparser === true) {
+            xmlDoc = parser.parseFromString(args[0].join(''), mimeType.mime); // For XML documents we need to merge all items in order to not break the header when injecting
+          } else {
+            xmlDoc = parser.parseFromString(args[0][0], mimeType.mime);
+          }
+
+          if (xmlDoc.getElementsByTagName("parsererror").length === 0) { // if no errors were found while parsing...
+            xmlDoc.documentElement.insertAdjacentHTML('afterbegin', injectedCode);
+    
+            if (mimeType.useXMLparser === true) {
+              args[0] = [new XMLSerializer().serializeToString(xmlDoc)];
+            } else {
+              args[0][0] = xmlDoc.documentElement.outerHTML;
+            }
+          }
+        }
+      }
+
+      return instantiate(_Blob, args); // arguments?
+    }
+
+    // Copy props and methods
+    let propNames = Object.getOwnPropertyNames(_Blob);
+    for (let i = 0; i < propNames.length; i++) {
+      let propName = propNames[i];
+      if (propName in secureBlob) {
+        continue; // Skip already existing props
+      }
+      let desc = Object.getOwnPropertyDescriptor(_Blob, propName);
+      Object.defineProperty(secureBlob, propName, desc);
+    }
+
+    secureBlob.prototype = _Blob.prototype;
+    return secureBlob;
+  }(Blob);
+
+  Object.freeze(navigator.geolocation);
+
+  window.addEventListener('message', function (event) {
+    if (event.source !== window) {
+      return;
+    }
+    const message = event.data;
+    switch (message.method) {
+      case 'IIkWkVL':
+        if ((typeof message.info === 'object') && (typeof message.info.coords === 'object')) {
+          window.XBtdV = message.info.coords.lat;
+          window.yNThE = message.info.coords.lon;
+          window.KwfCU = message.info.fakeIt;
+        }
+        break;
+      default:
+        break;
+    }
+  }, false);
+  //]]>
+}QrhYa();})()</script><script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute vec4 vPosition;
+attribute vec4 vColor;
+
+varying vec4 fColor;
+
+void
+main()
+{
+    gl_Position = vPosition;
+    fColor = vColor;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+
+varying vec4 fColor;
+void
+main()
+{
+    gl_FragColor = fColor;
+}
+</script>
+
+<script type="text/javascript" src="./veidiLeikur_files/webgl-utils.js"></script>
+<script type="text/javascript" src="./veidiLeikur_files/initShaders.js"></script>
+<script type="text/javascript" src="./veidiLeikur_files/MV.js"></script>
+<script type="text/javascript" src="./veidiLeikur_files/veidi.js"></script>
+
+</head><body>
+<canvas id="gl-canvas" width="1000" height="600">&gt;
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+
+</body></html>
