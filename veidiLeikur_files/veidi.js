@@ -9,8 +9,8 @@ var gl;
 let vertices;
 
 //  Skrefastærð kúlu og fugla
-var skrefKula = 0.0071;
-var skrefFugl = 0.071;
+var skrefKula = 0.071;
+var skrefFugl = 0.0071;
 
 //  Global breytur fyrir hversu margir punktar eru
 //  fyrir byssukúluna og fuglana
@@ -53,24 +53,33 @@ window.onload = function init() {
         vec2(0.01, -0.65), //C
         vec2(0.01, -0.7), //D
         */
-       vec2(1.1, 1.1),
-       vec2(1.1, 1.1),
-       vec2(1.1, 1.1),
-       vec2(1.1, 1.1),
-       vec2(1.1, 1.1),
-       vec2(1.1, 1.1),
+        vec2(1.1, 1.1),
+        vec2(1.1, 1.1),
+        vec2(1.1, 1.1),
+        vec2(1.1, 1.1),
+        vec2(1.1, 1.1),
+        vec2(1.1, 1.1),
         //  Pláss fyrir 5 kúlur
         vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
         vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
         vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
         vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
         vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
-        vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1)
+        vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
 
 
         // Fuglinn
+
+        vec2(1.1, 0.8),
+        vec2(1.1, 0.7),
+        vec2(1.2, 0.8),
+        vec2(1.1, 0.7),
+        vec2(1.2, 0.8),
+        vec2(1.2, 0.7)
+
     ];
 
+    fuglinnFlygur();
 
     // Load the data into the GPU
     var bufferIdByssa = gl.createBuffer();
@@ -90,8 +99,7 @@ window.onload = function init() {
         if (punktarKula < (5 * 6)) {
             for (let i = 3; i < 33; i++) {
                 if (vertices[i][0] === 1.1) {
-                    var xAs = 2*e.offsetX/canvas.width-1;
-                    console.log(2*e.offsetX/canvas.width-1)
+                    var xAs = 2 * e.offsetX / canvas.width - 1;
                     //debugger
                     vertices[i][0] = xAs - 0.01;
                     vertices[i++][1] = -0.65;
@@ -109,9 +117,7 @@ window.onload = function init() {
                     break;
                 }
             }
-
         }
-
     });
 
 
@@ -131,16 +137,11 @@ window.onload = function init() {
 }
 
 
-function byssukula(xPos) {
-    console.log(xPos)
-}
-
 function faerakulu() {
-    for (let i = 3; i < 3 + punktarKula; i++) {
+    for (let i = 3; i < 33; i++) {
         vertices[i][1] += skrefKula;
         if (vertices[i][1] > 1.05) {
             punktarKula--;
-            console.log(punktarKula)
             vertices[i][0] = 1.1;
             vertices[i][1] = 1.1;
         }
@@ -149,13 +150,51 @@ function faerakulu() {
 
 }
 
+function fuglinnFlygur() {
+    for (let i = 33; i < 39; i++) {
+        vertices[i][0] -= skrefFugl;
+        if (vertices[i][0] > 0) {
+            vertices[i][1] -= skrefFugl /4;
+        } else {
+            vertices[i][1] += skrefFugl/4
+        }
+    }
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(vertices));
+
+}
+
+function erArektur() {
+    for (let i = 3; i < 33; i++) {
+        if (vertices[i][0] > vertices[33][0] &&
+            vertices[i][0] < vertices[35][0] &&
+            vertices[i][1] < vertices[33][1] &&
+            vertices[i][1] > vertices[34][1]) {
+            let j = 33;
+            vertices[j][0] = 1.1;
+            vertices[j++][1] = 0.8;
+            vertices[j][0] = 1.1;
+            vertices[j++][1] = 0.7;
+            vertices[j][0] = 1.2;
+            vertices[j++][1] = 0.8;
+            vertices[j][0] = 1.1;
+            vertices[j++][1] = 0.7;
+            vertices[j][0] = 1.2;
+            vertices[j++][1] = 0.8;
+            vertices[j][0] = 1.2;
+            vertices[j++][1] = 0.7;
+        }
+    }
+}
+
+
 function render() {
     setTimeout(function () {
         faerakulu();
-
+        fuglinnFlygur();
+        erArektur();
 
         gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.drawArrays(gl.TRIANGLES, 0, 33);
+        gl.drawArrays(gl.TRIANGLES, 0, 39);
         //gl.drawArrays(gl.TRIANGLES, byrjar í minni, hversu margir punktar);
 
         window.requestAnimFrame(render);
