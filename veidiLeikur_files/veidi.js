@@ -9,17 +9,19 @@ var gl;
 let vertices;
 
 //  Skrefastærð kúlu og fugla
-var skrefKula = 0.071;
+var skrefKula = 0.0071;
 var skrefFugl = 0.0071;
 
 //  Global breytur fyrir hversu margir punktar eru
 //  fyrir byssukúluna og fuglana
-var punktarKula = 6;  // 6 f. hverja kúlu
+var punktarKula = 0;  // 6 f. hverja kúlu
 var punktarFuglar = 0;  // 6 f. hvern fugl
 
 //  Fjöldi byssukúla og fugla í loftinu
 var fjFugla = 0;
 var fjKula = 0;
+
+var colorA = vec4(1.0, 0.0, 0.0, 1.0);
 
 
 window.onload = function init() {
@@ -30,7 +32,7 @@ window.onload = function init() {
     if (!gl) { alert("WebGL isn't available"); }
 
     gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(0.8, 0.8, 0.8, 1.0);
+    gl.clearColor(0, 0.8, 1, 1.0);
 
     //
     //  Load shaders and initialize attribute buffers
@@ -44,39 +46,21 @@ window.onload = function init() {
         vec2(-0.05, -1),
         vec2(0, -0.7),
         vec2(0.05, -1),
-        // Kúlan 1
-        /*
-        vec2(-0.01, -0.65), //A
-        vec2(-0.01, -0.7), //B
-        vec2(0.01, -0.65), //C
-        vec2(-0.01, -0.7), //B
-        vec2(0.01, -0.65), //C
-        vec2(0.01, -0.7), //D
-        */
-        vec2(1.1, 1.1),
-        vec2(1.1, 1.1),
-        vec2(1.1, 1.1),
-        vec2(1.1, 1.1),
-        vec2(1.1, 1.1),
-        vec2(1.1, 1.1),
-        //  Pláss fyrir 5 kúlur
-        vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
-        vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
-        vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
-        vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
-        vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
-        vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
 
+        //  Pláss fyrir 5 kúlur
+        vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),vec2(1.1, 1.1), vec2(1.1, 1.1),
+        vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),vec2(1.1, 1.1), vec2(1.1, 1.1),
+        vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),vec2(1.1, 1.1), vec2(1.1, 1.1),
+        vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),vec2(1.1, 1.1), vec2(1.1, 1.1),
+        vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),vec2(1.1, 1.1), vec2(1.1, 1.1),
 
         // Fuglinn
-
         vec2(1.1, 0.8),
         vec2(1.1, 0.7),
         vec2(1.2, 0.8),
         vec2(1.1, 0.7),
         vec2(1.2, 0.8),
         vec2(1.2, 0.7)
-
     ];
 
     fuglinnFlygur();
@@ -91,6 +75,14 @@ window.onload = function init() {
     var vPosition = gl.getAttribLocation(program, "vPosition");
     gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vPosition);
+
+
+// Litir
+   // locColor = gl.getUniformLocation( program, "rcolor" );
+
+
+
+
 
 
     // Event listeners fyrir að skjóta
@@ -119,8 +111,13 @@ window.onload = function init() {
             }
         }
     });
+/*
+    setjaKuluInniFylki(){
+        i = punktarKula + 3 - 1;
 
+    }
 
+*/
 
     /**********************************
      * ******* BYSSAN ****************
@@ -152,15 +149,35 @@ function faerakulu() {
 
 function fuglinnFlygur() {
     for (let i = 33; i < 39; i++) {
-        vertices[i][0] -= skrefFugl;
+        vertices[i][0] -= skrefFugl; // Færir fuglinn á x-ás
         if (vertices[i][0] > 0) {
-            vertices[i][1] -= skrefFugl /4;
+           vertices[i][1] -= skrefFugl /4;  // Færir fuglinn á y-ás
         } else {
-            vertices[i][1] += skrefFugl/4
+            vertices[i][1] += skrefFugl/4  // Færir fuglinn á y-ás
+        }
+        if (vertices[i][0] < -1.2) {
+            geraNyjanFugl(i);
+            break;
         }
     }
     gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(vertices));
 
+}
+
+function geraNyjanFugl(j) {
+    vertices[j][0] = 1.1;
+            vertices[j++][1] = 0.8;
+            vertices[j][0] = 1.1;
+            vertices[j++][1] = 0.7;
+            vertices[j][0] = 1.2;
+            vertices[j++][1] = 0.8;
+            vertices[j][0] = 1.1;
+            vertices[j++][1] = 0.7;
+            vertices[j][0] = 1.2;
+            vertices[j++][1] = 0.8;
+            vertices[j][0] = 1.2;
+            vertices[j++][1] = 0.7;
+            skrefFugl = 0.0071 * (Math.random()*2.5 +1);
 }
 
 function erArektur() {
@@ -170,18 +187,8 @@ function erArektur() {
             vertices[i][1] < vertices[33][1] &&
             vertices[i][1] > vertices[34][1]) {
             let j = 33;
-            vertices[j][0] = 1.1;
-            vertices[j++][1] = 0.8;
-            vertices[j][0] = 1.1;
-            vertices[j++][1] = 0.7;
-            vertices[j][0] = 1.2;
-            vertices[j++][1] = 0.8;
-            vertices[j][0] = 1.1;
-            vertices[j++][1] = 0.7;
-            vertices[j][0] = 1.2;
-            vertices[j++][1] = 0.8;
-            vertices[j][0] = 1.2;
-            vertices[j++][1] = 0.7;
+            geraNyjanFugl(j);
+            
         }
     }
 }
@@ -194,6 +201,8 @@ function render() {
         erArektur();
 
         gl.clear(gl.COLOR_BUFFER_BIT);
+        // Breyta lit
+//        gl.uniform4fv( locColor, flatten(colorA) );
         gl.drawArrays(gl.TRIANGLES, 0, 39);
         //gl.drawArrays(gl.TRIANGLES, byrjar í minni, hversu margir punktar);
 
