@@ -51,19 +51,13 @@ window.onload = function init() {
         vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
         vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
         // Fuglinn
-        vec2(1.1, 0.8),
-        vec2(1.1, 0.7),
-        vec2(1.2, 0.8),
-        vec2(1.1, 0.7),
-        vec2(1.2, 0.8),
-        vec2(1.2, 0.7),
+        vec2(1.1, 0.8), vec2(1.1, 0.7), vec2(1.2, 0.8), vec2(1.1, 0.7), vec2(1.2, 0.8), vec2(1.2, 0.7),
         //  Pláss fyrir 5 stigaskor
         vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
         vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
         vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
         vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1),
         vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1), vec2(1.1, 1.1)
-
     ];
 
     // Load the data into the GPU
@@ -120,12 +114,11 @@ function faerakulu() {
         if (vertices[i][1] > 1.05) {
             punktarKula--;
             // Ef x eða y == 1.1, þá er ekki verið að nota það pláss í vertices[]
-            vertices[i][0] = 1.1; 
+            vertices[i][0] = 1.1;
             vertices[i][1] = 1.1;
         }
     }
     gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(vertices));
-
 }
 
 //  Færir fuglinn um 'skrefFugl'
@@ -182,23 +175,23 @@ function baetaVidStigi() {
         punktarStigaskor += 6;
     } else if (punktarStigaskor < (5 * 6)) {
         var i = 39 + punktarStigaskor;
-        vertices[i][0] = vertices[i-6][0] + 0.06;   //A
-        vertices[i][1] = vertices[i-6][1];          //A
+        vertices[i][0] = vertices[i - 6][0] + 0.06;   //A
+        vertices[i][1] = vertices[i - 6][1];          //A
         i++;
-        vertices[i][0] = vertices[i-6][0] + 0.06;   //B
-        vertices[i][1] = vertices[i-6][1];          //B
+        vertices[i][0] = vertices[i - 6][0] + 0.06;   //B
+        vertices[i][1] = vertices[i - 6][1];          //B
         i++;
-        vertices[i][0] = vertices[i-6][0] + 0.06;   //C
-        vertices[i][1] = vertices[i-6][1];          //C
+        vertices[i][0] = vertices[i - 6][0] + 0.06;   //C
+        vertices[i][1] = vertices[i - 6][1];          //C
         i++;
-        vertices[i][0] = vertices[i-6][0] + 0.06;   //B
-        vertices[i][1] = vertices[i-6][1];          //B
+        vertices[i][0] = vertices[i - 6][0] + 0.06;   //B
+        vertices[i][1] = vertices[i - 6][1];          //B
         i++;
-        vertices[i][0] = vertices[i-6][0] + 0.06;   //C
-        vertices[i][1] = vertices[i-6][1];          //C
+        vertices[i][0] = vertices[i - 6][0] + 0.06;   //C
+        vertices[i][1] = vertices[i - 6][1];          //C
         i++;
-        vertices[i][0] = vertices[i-6][0] + 0.06;   //D
-        vertices[i][1] = vertices[i-6][1];          //D
+        vertices[i][0] = vertices[i - 6][0] + 0.06;   //D
+        vertices[i][1] = vertices[i - 6][1];          //D
         i++;
         punktarStigaskor += 6;
         //  Textinn og gif'ið sem kemur þegar maður vinnur
@@ -207,15 +200,15 @@ function baetaVidStigi() {
             node2.setAttribute("width", "0");
             node2.setAttribute("height", "0");
             var node = document.createElement("h1");
-            node.setAttribute("onclick","location.reload()")
+            node.setAttribute("onclick", "location.reload()")
             node.innerHTML = 'Til hamingju þú vannst!!! (Ýttu á mig til að spila aftur.)';
             document.getElementById('body').appendChild(node);
             var mynd = document.createElement("img");
             mynd.setAttribute("src", "https://media.giphy.com/media/idFxmiV2dayJEqzXaW/giphy.gif")
-            mynd.setAttribute("width","1000");
-            mynd.setAttribute("height","600");
+            mynd.setAttribute("width", "1000");
+            mynd.setAttribute("height", "600");
             document.getElementById('body').appendChild(mynd);
-            
+
 
         }
     }
@@ -228,7 +221,7 @@ function erArektur() {
             vertices[i][0] < vertices[35][0] &&
             vertices[i][1] < vertices[33][1] &&
             vertices[i][1] > vertices[34][1]) {
-            
+
             baetaVidStigi();
             geraNyjanFugl();
         }
